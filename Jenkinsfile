@@ -4,7 +4,7 @@ pipeline {
     tools {
         maven 'maven'
     }
-#This is the part that needs to be changed later when sonar scanner has finished its installation ..
+
     environment {
         ImageName = 'my-app-image'
         BUILD_TAG = "latest"
