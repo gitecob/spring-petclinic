@@ -4,7 +4,7 @@ pipeline {
     tools {
         maven 'maven'
     }
-
+#This is the part that needs to be changed later when sonar scanner has finished its installation ..
     environment {
         ImageName = 'my-app-image'
         BUILD_TAG = "latest"
@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout From Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/luckysuie/luckyspringpetclinic.git'
+                git branch: 'main', url: 'https://github.com/gitecob/spring-petclinic.git'
             }
         }
 
@@ -47,15 +47,15 @@ pipeline {
 
         stage('SonarCloud Analysis') {
             environment {
-                SCANNER_HOME = tool 'sonar-scanner' // Matches tool config in Jenkins
+                SCANNER_HOME = tool 'sonarscanner'
             }
             steps {
                 withSonarQubeEnv('sonarserver') {
                     sh '''
-                        $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.organization=sonarproject456 \
-                        -Dsonar.projectName=jenkins \
-                        -Dsonar.projectKey=sonarproject456_jenkins789 \
+                        $SCANNER_HOME/bin/sonarscanner \
+                        -Dsonar.organization=jenkins-devops-project \
+                        -Dsonar.projectName=Jenkins Project \
+                        -Dsonar.projectKey=jenkins \
                         -Dsonar.sources=src \
                         -Dsonar.java.binaries=target/classes \
                         -Dsonar.host.url=https://sonarcloud.io
@@ -70,8 +70,8 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     sh '''
                         mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=sonarproject456_jenkins789 \
-                        -Dsonar.organization=sonarproject456 \
+                        -Dsonar.projectKey=jenkins \
+                        -Dsonar.organization=jenkins-devops-project \
                         -Dsonar.host.url=https://sonarcloud.io \
                         -Dsonar.login=$SONAR_TOKEN \
                         -Dsonar.qualitygate.wait=false
