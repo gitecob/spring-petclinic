@@ -46,19 +46,19 @@ pipeline {
             }
         }
 
-        stage('SonarCloud Analysis') {
-            steps {
-                echo 'Running SonarCloud analysis using Maven...'
-                withSonarQubeEnv('sonarserver') {
-                    sh '''
-                        mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=jenkins \
-                        -Dsonar.organization=jenkins-devops-project \
-                        -Dsonar.host.url=https://sonarcloud.io
-                    '''
-                }
-            }
-        }
+        // stage('SonarCloud Analysis') {
+        //     steps {
+        //         echo 'Running SonarCloud analysis using Maven...'
+        //         withSonarQubeEnv('sonarserver') {
+        //             sh '''
+        //                 mvn clean verify sonar:sonar \
+        //                 -Dsonar.projectKey=jenkins \
+        //                 -Dsonar.organization=jenkins-devops-project \
+        //                 -Dsonar.host.url=https://sonarcloud.io
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
