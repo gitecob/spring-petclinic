@@ -11,6 +11,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout From Git') {
             steps {
                 git branch: 'main', url: 'https://github.com/gitecob/spring-petclinic.git'
@@ -46,35 +47,14 @@ pipeline {
         }
 
         stage('SonarCloud Analysis') {
-            environment {
-                SCANNER_HOME = tool 'sonarscanner'
-            }
             steps {
+                echo 'Running SonarCloud analysis using Maven...'
                 withSonarQubeEnv('sonarserver') {
-                    sh '''
-                        $SCANNER_HOME/bin/sonarscanner \
-                        -Dsonar.organization=jenkins-devops-project \
-                        -Dsonar.projectName=Jenkins Project \
-                        -Dsonar.projectKey=jenkins \
-                        -Dsonar.sources=src \
-                        -Dsonar.java.binaries=target/classes \
-                        -Dsonar.host.url=https://sonarcloud.io
-                    '''
-                }
-            }
-        }
-
-        stage('Publish Sonar Report') {
-            steps {
-                echo 'Publishing SonarCloud report...'
-                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     sh '''
                         mvn clean verify sonar:sonar \
                         -Dsonar.projectKey=jenkins \
                         -Dsonar.organization=jenkins-devops-project \
-                        -Dsonar.host.url=https://sonarcloud.io \
-                        -Dsonar.login=$SONAR_TOKEN \
-                        -Dsonar.qualitygate.wait=false
+                        -Dsonar.host.url=https://sonarcloud.io
                     '''
                 }
             }
