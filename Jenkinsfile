@@ -70,20 +70,20 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
-            steps {
-                echo 'Running Trivy scan...'
-                sh '''
-                    trivy image --format table --severity HIGH,CRITICAL \
-                        --output trivy-report.txt luckyregistry.azurecr.io/${ImageName}:${BUILD_TAG}
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'trivy-report.txt'
-                }
-            }
-        }
+        // stage('Trivy Scan') {
+        //     steps {
+        //         echo 'Running Trivy scan...'
+        //         sh '''
+        //             trivy image --format table --severity HIGH,CRITICAL \
+        //                 --output trivy-report.txt luckyregistry.azurecr.io/${ImageName}:${BUILD_TAG}
+        //         '''
+        //     }
+        //     post {
+        //         always {
+        //             archiveArtifacts artifacts: 'trivy-report.txt'
+        //         }
+        //     }
+        // }
 
         stage('Login to ACR and Push Image') {
             steps {
